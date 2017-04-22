@@ -1,4 +1,4 @@
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 from locations.models import City, Country, Team
@@ -18,6 +18,17 @@ class Alias(models.Model):
 
 
 class Referee(models.Model):
+    name = models.CharField(max_length=128, unique=True)
+    slug = models.SlugField(unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+class Judge(models.Model):
     name = models.CharField(max_length=128, unique=True)
     slug = models.SlugField(unique=True)
 
@@ -50,10 +61,10 @@ class Fighter(models.Model):
     birth_place = models.ForeignKey(City, related_name='birth_place',
                                     blank=True, null=True)
     nationality = models.ManyToManyField(Country, blank=True)
-    height = models.IntegerField(blank=True, validators = [MinValueValidator(0),
-                                 MaxValueValidator(250)])
-    reach = models.IntegerField(blank=True, validators = [MinValueValidator(0),
-                                 MaxValueValidator(300)])
+    height = models.PositiveIntegerField(blank=True,
+                                         validators = [MaxValueValidator(250)])
+    reach = models.PositiveIntegerField(blank=True,
+                                        validators = [MaxValueValidator(300)])
     team = models.ManyToManyField(Team, blank=True)
     trainer = models.ManyToManyField(Trainer, blank=True)
     residence = models.ForeignKey(City, related_name='residence',
@@ -68,16 +79,21 @@ class Fighter(models.Model):
     instagram = models.URLField(blank=True)
     twitter = models.URLField(blank=True)
     website = models.URLField(blank=True)
+    mma_record = models.URLField(blank=True)
+    boxing_record = models.URLField(blank=True)
     slug = models.SlugField(unique=True)
+
+    @property
+    def full_name(self):
+        return '%s %s' % (self.first_name, self.last_name)
 
     class Meta:
         ordering = ['slug']
 
     def save(self, *args, **kwargs):
         if not self.pk and not self.slug:
-            self.slug = slugify(self.first_name) + ' ' +\
-            slugify(self.last_name)
+            self.slug = slugify(self.full_name)
         super(Fighter, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.birth_name
+        return self.full_name

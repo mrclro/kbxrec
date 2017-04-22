@@ -57,7 +57,7 @@ class Card(models.Model):
         super(Card, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.name + ' ' + self.event.name
+        return '%s - %s' % (self.name, self.event.name)
 
 
 class Title(models.Model):
@@ -70,7 +70,7 @@ class Title(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk and not self.slug:
-            self.slug = self.event.slug + '-' + slugify(self.name)
+            self.slug = slugify(self.name)
         super(Title, self).save(*args, **kwargs)
 
     def __str__(self):
