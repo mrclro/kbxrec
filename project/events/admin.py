@@ -27,3 +27,12 @@ class CardAdmin(admin.ModelAdmin):
     list_display = ('name', 'event', 'slug',)
     ordering = ('slug',)
 admin.site.register(Card, CardAdmin)
+
+
+class TitleAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
+    list_display = ('name', 'organization', 'slug',)
+    search_fields = ['name', 'organization__name', 'slug',]
+    list_filter = ['organization',]
+    ordering = ('slug',)
+admin.site.register(Title, TitleAdmin)

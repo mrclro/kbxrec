@@ -2,6 +2,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 from locations.models import City, Country, Team
+from events.models import Title
 
 
 class Alias(models.Model):
@@ -48,7 +49,7 @@ class Fighter(models.Model):
     birth_date = models.DateField(blank=True)
     birth_place = models.ForeignKey(City, related_name='birth_place',
                                     blank=True, null=True)
-    nationality = models.ManyToManyField(Country)
+    nationality = models.ManyToManyField(Country, blank=True)
     height = models.IntegerField(blank=True, validators = [MinValueValidator(0),
                                  MaxValueValidator(250)])
     reach = models.IntegerField(blank=True, validators = [MinValueValidator(0),
@@ -59,6 +60,10 @@ class Fighter(models.Model):
                                   blank=True, null=True)
     STANCES = ((u'O', u'Orthodox'), (u'S', u'Southpaw'),)
     stance = models.CharField(max_length=2, blank=True, choices=STANCES)
+    current_titles = models.ManyToManyField(Title, blank=True,
+                                            related_name='current_titles')
+    past_titles = models.ManyToManyField(Title, blank=True,
+                                            related_name='past_titles')
     facebook = models.URLField(blank=True)
     instagram = models.URLField(blank=True)
     twitter = models.URLField(blank=True)
