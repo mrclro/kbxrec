@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% for fighter in fighter_list %}
+    <p>{{fighter.full_name}}</p>
+  {% endfor %}
+{% endblock %}

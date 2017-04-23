@@ -1,3 +1,6 @@
-from django.shortcuts import render
+from django.views.generic import ListView
+from .models import Fighter
 
-# Create your views here.
+class FighterListView(ListView):
+    template_name = 'people/fighters.html'
+    model = Fighter

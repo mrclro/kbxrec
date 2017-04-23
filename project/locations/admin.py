@@ -18,7 +18,7 @@ admin.site.register(Region, RegionAdmin)
 
 class CityAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
-    list_display = ('name', 'region', 'get_country', 'slug',)
+    list_display = ('name', 'region', 'get_country',)
     def get_country(self, obj):
         return obj.region.country
     get_country.short_description = 'Country'

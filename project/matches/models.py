@@ -6,14 +6,14 @@ from people.models import Fighter, Judge, Referee
 
 class Match(models.Model):
     card = models.ForeignKey(Card)
-    title = models.ForeignKey(Title, blank=True)
+    title = models.ForeignKey(Title, blank=True, null=True)
     weight_max = models.PositiveIntegerField(
-        blank=True, validators = [MaxValueValidator(300)])
+        blank=True, null=True, validators = [MaxValueValidator(300)])
     round = models.PositiveIntegerField(
-        blank=True, validators = [MaxValueValidator(10)])
+        blank=True, null=True, validators = [MaxValueValidator(10)])
     time_seconds = models.PositiveIntegerField(
-        blank=True,
-        validators = [MaxValueValidator(10)])
+        blank=True, null=True,
+        validators = [MaxValueValidator(1000)])
     draw = models.BooleanField(default=False)
     no_contest = models.BooleanField(default=False)
     METHODS = (
@@ -31,7 +31,7 @@ class Match(models.Model):
     method_detail = models.CharField(max_length=64, blank=True)
     fighter1 = models.ForeignKey(Fighter, related_name='fighter1')
     fighter2 = models.ForeignKey(Fighter, related_name='fighter2')
-    referee = models.ForeignKey(Referee, blank=True)
+    referee = models.ForeignKey(Referee, blank=True, null=True)
     video = models.URLField(blank=True)
 
     class Meta:
@@ -39,7 +39,8 @@ class Match(models.Model):
         verbose_name_plural = "matches"
 
     def __str__(self):
-        return '%s vs %s' % (self.fighter1.slug, self.fighter2.slug)
+        return '%s vs %s' % (
+            self.fighter1.full_name, self.fighter2.full_name)
 
 
 class ScoreCard(models.Model):

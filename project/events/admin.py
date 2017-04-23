@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import *
+from matches.models import Match
 
 
 class OrganizationAdmin(admin.ModelAdmin):
@@ -22,10 +23,17 @@ class EventAdmin(admin.ModelAdmin):
 admin.site.register(Event, EventAdmin)
 
 
+class MatchInline(admin.StackedInline):
+    model = Match
+    classes = ['collapse']
+    raw_id_fields = ('title', 'fighter1', 'fighter2', 'referee',)
+
+
 class CardAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("event","name",)}
     list_display = ('name', 'event', 'slug',)
     ordering = ('slug',)
+    inlines = [MatchInline,]
 admin.site.register(Card, CardAdmin)
 
 

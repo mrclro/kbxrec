@@ -37,6 +37,7 @@ THIRD_PARTY_APPS = (
 )
 
 LOCAL_APPS = (
+    'index',
     'events.apps.EventsConfig',
     'locations.apps.LocationsConfig',
     'matches.apps.MatchesConfig',

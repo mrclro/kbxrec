@@ -70,7 +70,7 @@ class Team(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.slug = slugify(self.name)
-        super(Venue, self).save(*args, **kwargs)
+        super(Team, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ['name']

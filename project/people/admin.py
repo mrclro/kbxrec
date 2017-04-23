@@ -27,7 +27,25 @@ admin.site.register(Trainer, TrainerAdmin)
 
 
 class FighterAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (None, {
+            'fields': ('sex', ('first_name', 'last_name'), 'birth_name',
+                       'nationality',)
+        }),
+        ('More info', {
+            'classes': ('collapse',),
+            'fields': ('alias', ('birth_date', 'birth_place'), 'residence',
+                      ('height', 'reach'),'stance', 'team', 'trainer',
+                      ('facebook', 'instagram'), ('twitter', 'website'),
+                      ('mma_record', 'boxing_record'),
+                      'current_titles', 'past_titles', 'slug'),
+        }),
+    )
+    list_editable = ('twitter',)
+    raw_id_fields = ('residence', 'birth_place')
     prepopulated_fields = {"slug": ("birth_name",)}
+    filter_horizontal = ('nationality', 'alias', 'team', 'trainer',
+                         'current_titles', 'past_titles',)
     list_display = ('birth_name', 'get_alias', 'get_nationality', 'get_team', 'twitter',)
     def get_alias(self, obj):
         aliases = []
@@ -50,4 +68,5 @@ class FighterAdmin(admin.ModelAdmin):
     search_fields = ['first_name', 'slug',]
     list_filter = ['sex', 'stance', 'nationality']
     ordering = ('slug',)
+    save_on_top = True
 admin.site.register(Fighter, FighterAdmin)

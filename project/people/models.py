@@ -57,13 +57,13 @@ class Fighter(models.Model):
     last_name = models.CharField(max_length=128)
     birth_name = models.CharField(blank=True, max_length=256)
     alias = models.ManyToManyField(Alias, blank=True)
-    birth_date = models.DateField(blank=True)
+    birth_date = models.DateField(blank=True, null=True)
     birth_place = models.ForeignKey(City, related_name='birth_place',
                                     blank=True, null=True)
     nationality = models.ManyToManyField(Country, blank=True)
-    height = models.PositiveIntegerField(blank=True,
+    height = models.PositiveIntegerField(blank=True, null=True,
                                          validators = [MaxValueValidator(250)])
-    reach = models.PositiveIntegerField(blank=True,
+    reach = models.PositiveIntegerField(blank=True, null=True,
                                         validators = [MaxValueValidator(300)])
     team = models.ManyToManyField(Team, blank=True)
     trainer = models.ManyToManyField(Trainer, blank=True)
@@ -88,12 +88,7 @@ class Fighter(models.Model):
         return '%s %s' % (self.first_name, self.last_name)
 
     class Meta:
-        ordering = ['slug']
-
-    def save(self, *args, **kwargs):
-        if not self.pk and not self.slug:
-            self.slug = slugify(self.full_name)
-        super(Fighter, self).save(*args, **kwargs)
+        ordering = ['last_name']
 
     def __str__(self):
         return self.full_name
